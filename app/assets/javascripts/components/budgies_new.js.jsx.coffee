@@ -2,12 +2,14 @@
   displayName: "BudgiesNew"
 
   getInitialState: ->
-    id:       ""
     name:     ""
     gender:   true
-    color_id: 0
+    color_id: "0"
     age:      0
     tribal:   false
+
+  getDefaultProps: ->
+    colors: []
 
   handleChange: (e) ->
     name = e.target.name
@@ -23,16 +25,18 @@
       @setState @getInitialState()
     , 'JSON'
 
+  valid: ->
+    @state.name && @state.color_id != "0"
+
   render: ->
-    {id, name, gender, color_id, age, tribal} = @state
+    {name, gender, color_id, age, tribal} = @state
+
+    renderOptions = @props.colors.map (o) ->
+      `(<option key = {o.id} value = {o.id}>{ o.name }</option>)`
+    renderOptions.unshift `(<option key = {0} value = {0}> --- Select color --- </option>)`
 
     `(
       <form onSubmit = {this.handleSubmit}>
-
-        <div className = "form-group col-sm-1">
-          <label className = "control-label" htmlFor = "id"> ID </label>
-          <input className = "form-control" type = "number" value = {id} name = "id" placeholder = "ID" onChange = {this.handleChange} />
-        </div>
 
         <div className = "form-group col-sm-3">
           <label className = "control-label" htmlFor = "name"> Name </label>
@@ -49,9 +53,12 @@
           </div>
         </div>
 
-        <div className = "form-group col-sm-3">
+        <div className = "form-group col-sm-4">
           <label>Color:</label>
-          <input className = "form-control" value = {color_id} name = "color_id" placeholder="Color ID" onChange = {this.handleChange} />
+          <select className = "form-control" value = {color_id} name = "color_id" onChange = {this.handleChange} >
+            {renderOptions}
+          </select>
+
         </div>
 
         <div className = "form-group col-sm-2">
@@ -70,15 +77,7 @@
         </div>
 
         <div className = "form-group col-sm-1">
-          <button className = "btn btn-primary"> Create </button>
+          <button className = "btn btn-primary" disabled = {!this.valid()}> Create </button>
         </div>
       </form>
     )`
-
-
-
-          # <label>
-          #   Gender (click) :
-          #   {gender ? " male" : " female"}
-          #   <input type = "checkbox" checked = {gender} name = "gender" onChange = {this.handleChange} hidden />
-          # </label>

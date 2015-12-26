@@ -6,6 +6,9 @@
     gender: @props.value.gender
     tribal: @props.value.tribal
 
+  getDefaultProps: ->
+    colors: []
+
   handleChange: (e) ->
     name = e.target.name
     @setState "#{ name }": e.target.checked
@@ -30,11 +33,11 @@
   handleEdit: (e) ->
     e.preventDefault()
     data =
-      id: ReactDOM.findDOMNode(@refs.id).value
+      id: @props.value.id
       name: ReactDOM.findDOMNode(@refs.name).value
       gender: ReactDOM.findDOMNode(@refs.gender).checked
-      color_id: ReactDOM.findDOMNode(@refs.color_id).value
-      age: ReactDOM.findDOMNode(@refs.age).value
+      color_id: parseInt ReactDOM.findDOMNode(@refs.color_id).value
+      age: parseInt ReactDOM.findDOMNode(@refs.age).value
       tribal: ReactDOM.findDOMNode(@refs.tribal).checked
 
     $.ajax
@@ -49,12 +52,18 @@
 
   recordRow: ->
     {id, name, gender, color_id, age, tribal} = @props.value
+
+    color = @props.colors.find (c) ->
+      c.id == color_id
+
+    color_name = if !!color then color.name else ""
+
     `(
       <tr>
         <td>{ id }</td>
         <td>{ name }</td>
         <td>{ gender ? " male" : " female" }</td>
-        <td>{ color_id }</td>
+        <td>{ color_name }</td>
         <td>{ age }</td>
         <td>{ tribal ? " tribal" : " no breeding" }</td>
         <td>
@@ -67,9 +76,13 @@
   recordForm: ->
     {id, name, color_id, age} = @props.value
     {gender, tribal} = @state
+
+    renderOptions = @props.colors.map (o) ->
+      `(<option key = {o.id} value = {o.id}>{ o.name }</option>)`
+
     `(
       <tr>
-        <td><input className = "form-control" type = "number"  defaultValue = {id}   ref = "id"/></td>
+        <td>{ id }</td>
         <td><input className = "form-control" type = "text"    defaultValue = {name} ref = "name"/></td>
         <td>
           <div className = "checkbox">
@@ -79,7 +92,11 @@
             </label>
           </div>
         </td>
-        <td><input className = "form-control" defaultValue = {color_id} ref = "color_id"/></td>
+        <td>
+          <select className = "form-control" defaultValue = {color_id} ref = "color_id" name = "color_id" onChange = {this.handleChange} >
+            { renderOptions }
+          </select>
+        </td>
         <td><input className = "form-control" type = "number"  defaultValue = {age}  ref = "age"/></td>
         <td>
           <div className = "checkbox">

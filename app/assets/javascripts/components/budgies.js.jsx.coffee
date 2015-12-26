@@ -21,6 +21,11 @@
     @setState
       budgies: data
 
+  setColors: (data) ->
+    return false unless @isMounted()
+    @setState
+      colors: data
+
   addBudgie: (budgie) ->
     budgies = React.addons.update(@state.budgies, { $push: [budgie] })
     @setState budgies: budgies
@@ -28,29 +33,24 @@
   deleteBudgie: (budgie) ->
     index = @state.budgies.indexOf budgie
     budgies = React.addons.update(@state.budgies, { $splice: [[index, 1]] })
-    @replaceState budgies: budgies
+    @setState budgies: budgies
 
   updateBudgie: (budgie, data) ->
     index = @state.budgies.indexOf budgie
     budgies = React.addons.update(@state.budgies, { $splice: [[index, 1, data]] })
-    @replaceState budgies: budgies
-
-  setColors: (data) ->
-    return false unless @isMounted()
-    @setState
-      colors: data
+    @setState budgies: budgies
 
   getDataFail: (xhr, status, err) =>
     console.error @props.url, status, err.toString()
 
   render: ->
     renderRows = @state.budgies.map (b) =>
-      `(<BudgiesRow key = {b.id} value = {b} handleDelete = {_this.deleteBudgie} handleEdit = {_this.updateBudgie}/>)`
+      `(<BudgiesRow key = {b.id} value = {b} colors = {_this.state.colors} handleDelete = {_this.deleteBudgie} handleEdit = {_this.updateBudgie}/>)`
 
     `(
       <div>
         <h2>Budgies</h2>
-        <BudgiesNew handleNew = {this.addBudgie} />
+        <BudgiesNew colors = {this.state.colors} handleNew = {this.addBudgie} />
         <table className = "table table-bordered">
           <thead>
             <tr>
