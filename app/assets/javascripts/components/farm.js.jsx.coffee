@@ -3,5 +3,8 @@
 
   render: ->
     `(
-      <h1>Farm</h1>
+      <div>
+        <h1>Farm</h1>
+        <Budgies/>
+      </div>
     )`

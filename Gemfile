@@ -16,7 +16,7 @@ gem 'bootstrap-sass', '~> 3.3', '>= 3.3.6'
 gem 'react-rails', '~> 1.5'
 gem 'js-routes', '~> 1.2'
 
-gem 'responders', '~> 2.0' 
+gem 'responders', '~> 2.0'
 
 group :development, :test do
   gem 'byebug'
