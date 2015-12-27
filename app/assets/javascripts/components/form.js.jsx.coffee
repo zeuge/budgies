@@ -52,6 +52,10 @@
     options.unshift `(<option key = {0} value = {0}> --- { label } --- </option>)`
     options
 
+  handleGenerateName: ->
+    {gender, color_id, age, tribal} = @state
+    @setState name: "#{genderText(gender)} #{getName(@props.colors, color_id)} #{age} #{tribalText(tribal)}"
+
   render: ->
     {name, gender, color_id, age, tribal, father_id, mother_id} = @state
 
@@ -71,7 +75,12 @@
         <div className = "form-group">
           <label className = "col-sm-2 control-label" htmlFor = "name">Name</label>
           <div className = "col-sm-10">
-            <input className = "form-control" type = "text" value = {name} name = "name" onChange = {this.handleChange} />
+            <div className = "input-group">
+              <input className = "form-control" type = "text" value = {name} name = "name" onChange = {this.handleChange} />
+              <span className = "input-group-btn">
+                <a className = "btn btn-default" onClick = {this.handleGenerateName}>Generate</a>
+              </span>
+            </div>
           </div>
         </div>
 
