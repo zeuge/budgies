@@ -21,6 +21,8 @@
     color_id: "0"
     age:      0
     tribal:   false
+    father_id:  0
+    mother_id:  0
 
   getData: (path, successHandler) ->
     $.ajax
@@ -84,7 +86,15 @@
 
   renderTable: ->
     renderRows = @state.budgies.map (b) =>
-      `(<Row key = {b.id} value = {b} colors = {_this.state.colors} handleEdit = {_this.handleEdit} handleDelete = {_this.handleDelete} />)`
+      `(
+        <Row  key           = {b.id}
+              value         = {b}
+              budgies       = {_this.state.budgies}
+              colors        = {_this.state.colors}
+              handleEdit    = {_this.handleEdit}
+              handleDelete  = {_this.handleDelete} />
+      )`
+
     `(
       <div>
         <h2>Budgies</h2>
@@ -92,13 +102,15 @@
         <table className = "table table-bordered">
           <thead>
             <tr>
-              <th className = "col-sm-1"> ID </th>
-              <th className = "col-sm-3"> Name </th>
-              <th className = "col-sm-1"> Gender </th>
-              <th className = "col-sm-3"> Color </th>
-              <th className = "col-sm-1"> Age </th>
-              <th className = "col-sm-1"> Tribal </th>
-              <th className = "col-sm-2"> Actions </th>
+              <th> ID </th>
+              <th> Name </th>
+              <th> Gender </th>
+              <th> Color </th>
+              <th> Age </th>
+              <th> Tribal </th>
+              <th> Father </th>
+              <th> Mother </th>
+              <th> Actions </th>
             </tr>
           </thead>
           <tbody>
@@ -111,12 +123,14 @@
   render: ->
     if @state.new
       render = `(<Form  value         = {this.state.budgie}
+                        budgies       = {this.state.budgies}
                         colors        = {this.state.colors}
                         buttonLabel   = "Create"
                         handleSubmit  = {this.handleCreate}
                         handleCancel  = {this.handleCancelCreate} />)`
     else if @state.edit
       render = `(<Form  value         = {this.state.budgie}
+                        budgies       = {this.state.budgies}
                         colors        = {this.state.colors}
                         buttonLabel   = "Update"
                         handleSubmit  = {this.handleUpdate}

@@ -2,31 +2,37 @@
   displayName: "Form"
 
   getInitialState: ->
-    name:     @props.value.name
-    gender:   @props.value.gender
-    color_id: @props.value.color_id
-    age:      @props.value.age
-    tribal:   @props.value.tribal
+    name:       @props.value.name
+    gender:     @props.value.gender
+    color_id:   @props.value.color_id
+    age:        @props.value.age
+    tribal:     @props.value.tribal
+    father_id:  @props.value.father_id
+    mother_id:  @props.value.mother_id
 
   getDefaultProps: ->
     colors: []
     value:
-      id:       0
-      name:     ""
-      gender:   true
-      color_id: "0"
-      age:      0
-      tribal:   false
+      id:         0
+      name:       ""
+      gender:     true
+      color_id:   "0"
+      age:        0
+      tribal:     false
+      father_id:  0
+      mother_id:  0
 
   handleSubmit: (e) ->
     e.preventDefault()
     data =
-      id:       @props.value.id
-      name:     @state.name
-      gender:   @state.gender
-      color_id: @state.color_id
-      age:      @state.age
-      tribal:   @state.tribal
+      id:         @props.value.id
+      name:       @state.name
+      gender:     @state.gender
+      color_id:   @state.color_id
+      age:        @state.age
+      tribal:     @state.tribal
+      father_id:  @state.father_id
+      mother_id:  @state.mother_id
     @props.handleSubmit @props.value, data
 
   handleChange: (e) ->
@@ -37,14 +43,27 @@
       @setState "#{ name }": e.target.value
 
   valid: ->
-     @state.name && parseInt(@state.color_id)!=0
+    {name, color_id, father_id, mother_id} = @state
+    name && parseInt(color_id)!=0 && compareColors(@props.budgies, father_id, mother_id)
+
+  buildOptions: (arr, label)->
+    options = arr.map (o) ->
+      `(<option key = {o.id} value = {o.id}>{ o.name }</option>)`
+    options.unshift `(<option key = {0} value = {0}> --- { label } --- </option>)`
+    options
 
   render: ->
-    {name, gender, color_id, age, tribal} = @state
+    {name, gender, color_id, age, tribal, father_id, mother_id} = @state
 
-    colorOptions = @props.colors.map (o) ->
-      `(<option key = {o.id} value = {o.id}>{ o.name }</option>)`
-    colorOptions.unshift `(<option key = {0} value = {0}> --- Select color --- </option>)`
+    colorOptions = @buildOptions(@props.colors, "Select color")
+
+    men = @props.budgies.filter (o) ->
+      o.gender && o.tribal && o.age >= 12
+    fatherOptions = @buildOptions(men, "no father")
+
+    women = @props.budgies.filter (o) ->
+      !o.gender && o.tribal && o.age >= 12
+    motherOptions = @buildOptions(women, "no mother")
 
     `(
       <form onSubmit = {this.handleSubmit}>
@@ -93,10 +112,29 @@
         </div>
 
         <div className = "form-group">
+          <label className = "col-sm-2 control-label" htmlFor = "father_id">Father</label>
+          <div className = "col-sm-10">
+            <select className = "form-control" value = {father_id} name = "father_id" onChange = {this.handleChange} >
+              {fatherOptions}
+            </select>
+          </div>
+        </div>
+
+        <div className = "form-group">
+          <label className = "col-sm-2 control-label" htmlFor = "mother_id">Mother</label>
+          <div className = "col-sm-10">
+            <select className = "form-control" value = {mother_id} name = "mother_id" onChange = {this.handleChange} >
+              {motherOptions}
+            </select>
+          </div>
+        </div>
+
+        <div className = "form-group">
           <div className = "col-sm-offset-2 col-sm-10">
             <button className = "btn btn-primary" disabled = {!this.valid()}>{this.props.buttonLabel}</button>
             <a className = "btn btn-default" onClick = {this.props.handleCancel} > Cancel </a>
           </div>
         </div>
+
       </form>
     )`

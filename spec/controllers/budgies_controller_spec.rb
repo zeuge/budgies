@@ -25,6 +25,8 @@ describe BudgiesController do
       expect(json[0][:color_id]).to eq budgie.color_id
       expect(json[0][:age]).to eq budgie.age
       expect(json[0][:tribal]).to eq budgie.tribal
+      expect(json[0][:father_id]).to eq budgie.father_id
+      expect(json[0][:mother_id]).to eq budgie.mother_id
     end
   end
 
@@ -43,6 +45,8 @@ describe BudgiesController do
       expect(json[:color_id]).to eq budgie.color_id
       expect(json[:age]).to eq budgie.age
       expect(json[:tribal]).to eq budgie.tribal
+      expect(json[:father_id]).to eq budgie.father_id
+      expect(json[:mother_id]).to eq budgie.mother_id
     end
 
     it "returns errors with invalid id" do

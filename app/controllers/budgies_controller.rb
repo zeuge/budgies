@@ -44,6 +44,6 @@ class BudgiesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def budgie_params
-      params.require(:budgie).permit(:name, :gender, :color_id, :age, :tribal)
+      params.require(:budgie).permit(:name, :gender, :color_id, :age, :tribal, :father_id, :mother_id)
     end
 end
