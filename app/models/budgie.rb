@@ -40,18 +40,18 @@ class Budgie < ActiveRecord::Base
 
   def self.ancestors_id_sql_for(instance)
     tree_sql =  <<-SQL
-      WITH RECURSIVE tree(id, father_id) AS (
-        SELECT id, father_id
+      WITH RECURSIVE tree AS (
+        SELECT *
         FROM #{table_name}
         WHERE id = #{instance.id}
 
         UNION ALL
 
-        SELECT #{table_name}.id, #{table_name}.father_id
+        SELECT #{table_name}.*
         FROM tree
-        JOIN #{table_name} ON #{table_name}.id = tree.id
+        JOIN #{table_name} ON #{table_name}.id = tree.father_id OR #{table_name}.id = tree.mother_id
       )
-      SELECT DISTINCT father_id FROM tree ORDER BY father_id
+      SELECT id FROM tree ORDER BY id
     SQL
   end
 
