@@ -23,4 +23,4 @@
   find2 = @findById(array, id2)
   return false unless find2
 
-  find1.color_id == find2.color_id
+  parseInt(find1.color_id) == parseInt(find2.color_id)
