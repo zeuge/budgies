@@ -70,7 +70,7 @@
     motherOptions = @buildOptions(women, "no mother")
 
     `(
-      <form onSubmit = {this.handleSubmit}>
+      <form className = "form-horizontal" onSubmit = {this.handleSubmit}>
 
         <div className = "form-group">
           <label className = "col-sm-2 control-label" htmlFor = "name">Name</label>

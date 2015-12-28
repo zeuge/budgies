@@ -4,13 +4,17 @@
   getDefaultProps: ->
     colors: []
 
-  handleDelete: (e) ->
+  handleShow: (e) ->
     e.preventDefault()
-    @props.handleDelete @props.value
+    @props.handleShow @props.value
 
   handleEdit: (e) ->
     e.preventDefault()
     @props.handleEdit @props.value
+
+  handleDelete: (e) ->
+    e.preventDefault()
+    @props.handleDelete @props.value
 
   render: ->
     {id, name, gender, color_id, age, tribal, father_id, mother_id} = @props.value
@@ -27,7 +31,8 @@
         <td>{ getName(budgies, father_id) }</td>
         <td>{ getName(budgies, mother_id) }</td>
         <td>
-          <a className = "btn btn-default" onClick = {this.handleEdit}> Edit </a>
+          <a className = "btn btn-default" onClick = {this.handleShow}> Show </a>
+          <a className = "btn btn-warning" onClick = {this.handleEdit}> Edit </a>
           <a className = "btn btn-danger" onClick = {this.handleDelete}> Delete </a>
         </td>
       </tr>

@@ -4,8 +4,7 @@
   getInitialState: ->
     budgies: []
     colors: []
-    new: false
-    edit: false
+    action: "index"
     budgie: @initialBudgie()
 
   componentDidMount: ->
@@ -30,24 +29,43 @@
       dataType: "JSON"
       success: successHandler
 
-  handleDelete: (budgie) ->
+  handleNew: ->
+    @setState action: "new"
+
+  handleCreate: (budgie, data) ->
     $.ajax
-      method: "DELETE"
-      url: Routes.budgy_path(budgie.id)
+      method: "POST"
+      url: Routes.budgies_path()
       dataType: "JSON"
-      success: () =>
-        index = @state.budgies.indexOf budgie
-        budgies = React.addons.update(@state.budgies, { $splice: [[index, 1]] })
-        @setState budgies: budgies
+      data:
+        budgie: data
+      success: (data) =>
+        budgies = React.addons.update(@state.budgies, { $push: [data] })
+        @setState
+          budgies: budgies
+          action: "index"
+
+  handleCancelCreate: ->
+    @setState action: "index"
+
+  handleShow: (budgie) ->
+    @setState
+      action: "show"
+      budgie: budgie
+
+  handleCancelShow: (budgie) ->
+    @setState
+      action: "index"
+      budgie: @initialBudgie()
 
   handleEdit: (budgie) ->
     @setState
-      edit: true
+      action: "edit"
       budgie: budgie
 
   handleCancelEdit: ->
     @setState
-      edit: false
+      action: "index"
       budgie: @initialBudgie()
 
   handleUpdate: (budgie, data) ->
@@ -62,27 +80,18 @@
         budgies = React.addons.update(@state.budgies, { $splice: [[index, 1, data]] })
         @setState
           budgies: budgies
-          edit: false
+          action: "index"
           budgie: @initialBudgie()
 
-  handleNew: ->
-    @setState new: true
-
-  handleCreate: (budgie, data) ->
+  handleDelete: (budgie) ->
     $.ajax
-      method: "POST"
-      url: Routes.budgies_path()
+      method: "DELETE"
+      url: Routes.budgy_path(budgie.id)
       dataType: "JSON"
-      data:
-        budgie: data
-      success: (data) =>
-        budgies = React.addons.update(@state.budgies, { $push: [data] })
-        @setState
-          budgies: budgies
-          new: false
-
-  handleCancelCreate: ->
-    @setState new: false
+      success: () =>
+        index = @state.budgies.indexOf budgie
+        budgies = React.addons.update(@state.budgies, { $splice: [[index, 1]] })
+        @setState budgies: budgies
 
   renderTable: ->
     renderRows = @state.budgies.map (b) =>
@@ -91,6 +100,7 @@
               value         = {b}
               budgies       = {_this.state.budgies}
               colors        = {_this.state.colors}
+              handleShow    = {_this.handleShow}
               handleEdit    = {_this.handleEdit}
               handleDelete  = {_this.handleDelete} />
       )`
@@ -121,22 +131,29 @@
     )`
 
   render: ->
-    if @state.new
-      render = `(<Form  value         = {this.state.budgie}
-                        budgies       = {this.state.budgies}
-                        colors        = {this.state.colors}
-                        buttonLabel   = "Create"
-                        handleSubmit  = {this.handleCreate}
-                        handleCancel  = {this.handleCancelCreate} />)`
-    else if @state.edit
-      render = `(<Form  value         = {this.state.budgie}
-                        budgies       = {this.state.budgies}
-                        colors        = {this.state.colors}
-                        buttonLabel   = "Update"
-                        handleSubmit  = {this.handleUpdate}
-                        handleCancel  = {this.handleCancelEdit} />)`
-    else
-      render = @renderTable()
+    render = switch @state.action
+      when "new"
+         `(<Form  value         = {this.state.budgie}
+                  budgies       = {this.state.budgies}
+                  colors        = {this.state.colors}
+                  buttonLabel   = "Create"
+                  handleSubmit  = {this.handleCreate}
+                  handleCancel  = {this.handleCancelCreate} />)`
+      when "edit"
+        `(<Form  value         = {this.state.budgie}
+                 budgies       = {this.state.budgies}
+                 colors        = {this.state.colors}
+                 buttonLabel   = "Update"
+                 handleSubmit  = {this.handleUpdate}
+                 handleCancel  = {this.handleCancelEdit} />)`
+      when "show"
+        `(<Show  value         = {this.state.budgie}
+                 budgies       = {this.state.budgies}
+                 colors        = {this.state.colors}
+                 buttonLabel   = "Update"
+                 handleCancel  = {this.handleCancelShow} />)`
+      else
+        @renderTable()
 
     `(
       <div>
