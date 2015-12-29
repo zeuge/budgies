@@ -18,7 +18,16 @@
 
   render: ->
     {id, name, gender, color_id, age, tribal, father_id, mother_id} = @props.value
-    {budgies, colors} = @props
+    {budgies, colors, actions} = @props
+
+    actions = if actions
+      `(<td>
+        <a className = "btn btn-default" onClick = {this.handleShow}> Show </a>
+        <a className = "btn btn-warning" onClick = {this.handleEdit}> Edit </a>
+        <a className = "btn btn-danger" onClick = {this.handleDelete}> Delete </a>
+      </td>)`
+    else
+      ""
 
     `(
       <tr>
@@ -30,10 +39,6 @@
         <td>{ tribalText(tribal) }</td>
         <td>{ getName(budgies, father_id) }</td>
         <td>{ getName(budgies, mother_id) }</td>
-        <td>
-          <a className = "btn btn-default" onClick = {this.handleShow}> Show </a>
-          <a className = "btn btn-warning" onClick = {this.handleEdit}> Edit </a>
-          <a className = "btn btn-danger" onClick = {this.handleDelete}> Delete </a>
-        </td>
+        { actions }
       </tr>
     )`

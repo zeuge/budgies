@@ -8,9 +8,9 @@
     budgie: @initialBudgie()
 
   componentDidMount: ->
-    @getData Routes.budgies_path(), (data) =>
+    getData "/budgies", (data) =>
       @setState budgies: data
-    @getData Routes.colors_path(), (data) =>
+    getData "/colors", (data) =>
       @setState colors: data
 
   initialBudgie: ->
@@ -23,19 +23,13 @@
     father_id:  0
     mother_id:  0
 
-  getData: (path, successHandler) ->
-    $.ajax
-      url: path
-      dataType: "JSON"
-      success: successHandler
-
   handleNew: ->
     @setState action: "new"
 
   handleCreate: (budgie, data) ->
     $.ajax
       method: "POST"
-      url: Routes.budgies_path()
+      url: "/budgies"
       dataType: "JSON"
       data:
         budgie: data
@@ -71,7 +65,7 @@
   handleUpdate: (budgie, data) ->
     $.ajax
       method: "PUT"
-      url: Routes.budgie_path(budgie.id)
+      url: "/budgies/#{budgie.id}"
       dataType: "JSON"
       data:
         budgie: data
@@ -86,49 +80,12 @@
   handleDelete: (budgie) ->
     $.ajax
       method: "DELETE"
-      url: Routes.budgie_path(budgie.id)
+      url: "/budgies/#{budgie.id}"
       dataType: "JSON"
       success: () =>
         index = @state.budgies.indexOf budgie
         budgies = React.addons.update(@state.budgies, { $splice: [[index, 1]] })
         @setState budgies: budgies
-
-  renderTable: ->
-    renderRows = @state.budgies.map (b) =>
-      `(
-        <Row  key           = {b.id}
-              value         = {b}
-              budgies       = {_this.state.budgies}
-              colors        = {_this.state.colors}
-              handleShow    = {_this.handleShow}
-              handleEdit    = {_this.handleEdit}
-              handleDelete  = {_this.handleDelete} />
-      )`
-
-    `(
-      <div>
-        <h2>Budgies</h2>
-        <a className = "btn btn-primary" onClick = {this.handleNew}> New </a>
-        <table className = "table table-bordered">
-          <thead>
-            <tr>
-              <th> ID </th>
-              <th> Name </th>
-              <th> Gender </th>
-              <th> Color </th>
-              <th> Age </th>
-              <th> Tribal </th>
-              <th> Father </th>
-              <th> Mother </th>
-              <th> Actions </th>
-            </tr>
-          </thead>
-          <tbody>
-            { renderRows }
-          </tbody>
-        </table>
-      </div>
-    )`
 
   render: ->
     render = switch @state.action
@@ -153,7 +110,19 @@
                  buttonLabel   = "Update"
                  handleCancel  = {this.handleCancelShow} />)`
       else
-        @renderTable()
+        `(
+          <div>
+            <h2>Budgies</h2>
+            <a className = "btn btn-primary" onClick = {this.handleNew}> New </a>
+            <Table budgies       = {this.state.budgies}
+                   colors        = {this.state.colors}
+                   actions       = {true}
+                   handleShow    = {this.handleShow}
+                   handleEdit    = {this.handleEdit}
+                   handleDelete  = {this.handleDelete} />
+          </div>
+        )`
+
 
     `(
       <div>

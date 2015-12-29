@@ -1,3 +1,10 @@
+@getData = (path, successHandler) ->
+  $.ajax
+    url: path
+    dataType: "JSON"
+    success: successHandler
+
+
 @genderText = (gender) ->
   if gender then " male" else " female"
 
