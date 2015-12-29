@@ -71,7 +71,7 @@
   handleUpdate: (budgie, data) ->
     $.ajax
       method: "PUT"
-      url: Routes.budgy_path(budgie.id)
+      url: Routes.budgie_path(budgie.id)
       dataType: "JSON"
       data:
         budgie: data
@@ -86,7 +86,7 @@
   handleDelete: (budgie) ->
     $.ajax
       method: "DELETE"
-      url: Routes.budgy_path(budgie.id)
+      url: Routes.budgie_path(budgie.id)
       dataType: "JSON"
       success: () =>
         index = @state.budgies.indexOf budgie

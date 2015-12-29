@@ -1,6 +1,6 @@
 class BudgiesController < ApplicationController
   respond_to :json
-  before_action :set_budgie, only: [:show, :update, :destroy]
+  before_action :set_budgie, only: [:show, :update, :destroy, :descendents, :ancestors]
 
   rescue_from ActiveRecord::RecordNotFound do |exception|
     render json: {error: exception.message}, status: :not_found
@@ -34,6 +34,18 @@ class BudgiesController < ApplicationController
   def destroy
     @budgie.destroy
     head :no_content
+  end
+
+  # GET /budgies/1/descendents.json
+  def descendents
+    @budgies = @budgie.descendents
+    respond_with @budgies
+  end
+
+  # GET /budgies/1/ancestors.json
+  def ancestors
+    @budgies = @budgie.ancestors
+    respond_with @budgies
   end
 
   private
