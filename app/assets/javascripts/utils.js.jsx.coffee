@@ -4,6 +4,11 @@
     dataType: "JSON"
     success: successHandler
 
+@buildOptions = (arr, label, value = 0)->
+  options = arr.map (o) ->
+    `(<option key = {o.id} value = {o.id}>{ o.name }</option>)`
+  options.unshift `(<option key = {0} value = { value }> --- { label } --- </option>)`
+  options
 
 @genderText = (gender) ->
   if gender then " male" else " female"

@@ -27,7 +27,7 @@
         <a className = "btn btn-danger" onClick = {this.handleDelete}> Delete </a>
       </td>)`
     else
-      ""
+      null
 
     `(
       <tr>

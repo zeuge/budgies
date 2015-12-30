@@ -8,7 +8,10 @@ class BudgiesController < ApplicationController
 
   # GET /budgies.json
   def index
-    @budgies = Budgie.all
+    cond = params.permit(:id, :name, :gender, :color_id, :age, :tribal).slice(:id, :name, :gender, :color_id, :age, :tribal)
+
+    # @budgies = Budgie.all
+    @budgies = Budgie.where cond
     respond_with @budgies
   end
 

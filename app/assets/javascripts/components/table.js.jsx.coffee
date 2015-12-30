@@ -28,7 +28,7 @@
               handleDelete  = {_this.handleDelete} />
       )`
 
-    actionsHead = if @props.actions then `(<th> Actions </th>)` else ""
+    actionsHead = if @props.actions then `(<th> Actions </th>)` else null
 
     `(
       <table className = "table table-bordered">

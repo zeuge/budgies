@@ -46,12 +46,6 @@
     {name, color_id, father_id, mother_id} = @state
     name && parseInt(color_id)!=0 && compareColors(@props.budgies, father_id, mother_id)
 
-  buildOptions: (arr, label)->
-    options = arr.map (o) ->
-      `(<option key = {o.id} value = {o.id}>{ o.name }</option>)`
-    options.unshift `(<option key = {0} value = {0}> --- { label } --- </option>)`
-    options
-
   handleGenerateName: ->
     {gender, color_id, age, tribal} = @state
     @setState name: "#{genderText(gender)} #{getName(@props.colors, color_id)} #{age} #{tribalText(tribal)}"
@@ -59,15 +53,15 @@
   render: ->
     {name, gender, color_id, age, tribal, father_id, mother_id} = @state
 
-    colorOptions = @buildOptions(@props.colors, "Select color")
+    colorOptions = buildOptions(@props.colors, "Select color")
 
     men = @props.budgies.filter (o) ->
       o.gender && o.tribal && o.age >= 12
-    fatherOptions = @buildOptions(men, "no father")
+    fatherOptions = buildOptions(men, "no father")
 
     women = @props.budgies.filter (o) ->
       !o.gender && o.tribal && o.age >= 12
-    motherOptions = @buildOptions(women, "no mother")
+    motherOptions = buildOptions(women, "no mother")
 
     `(
       <form className = "form-horizontal" onSubmit = {this.handleSubmit}>

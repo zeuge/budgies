@@ -18,7 +18,7 @@ gem 'react-rails', '~> 1.5'
 gem 'responders', '~> 2.0'
 
 group :development, :test do
-  gem 'byebug'
+  # gem 'byebug'
   gem 'web-console', '~> 2.0'
   gem 'spring'
 

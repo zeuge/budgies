@@ -87,6 +87,12 @@
         budgies = React.addons.update(@state.budgies, { $splice: [[index, 1]] })
         @setState budgies: budgies
 
+  handleFind: ->
+    @setState action: "find"
+
+  handleCancelFind: ->
+    @setState action: "index"
+
   render: ->
     render = switch @state.action
       when "new"
@@ -109,11 +115,16 @@
                  colors        = {this.state.colors}
                  buttonLabel   = "Update"
                  handleCancel  = {this.handleCancelShow} />)`
+      when "find"
+        `(<Find budgies       = {this.state.budgies}
+                colors        = {this.state.colors}
+                handleCancel  = {this.handleCancelShow} />)`
       else
         `(
           <div>
             <h2>Budgies</h2>
             <a className = "btn btn-primary" onClick = {this.handleNew}> New </a>
+            <a className = "btn btn-default" onClick = {this.handleFind}> Find </a>
             <Table budgies       = {this.state.budgies}
                    colors        = {this.state.colors}
                    actions       = {true}
